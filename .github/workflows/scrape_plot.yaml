@@ -26,9 +26,11 @@ jobs:
 
       - name: Update README Run Counter
         run: |
-          count=$(grep -oP 'This workflow has run \K\d+' README.md)
+          # Find the current count or default to 0 if not found
+          count=$(grep -o 'This workflow has run [0-9]* times' README.md | grep -o '[0-9]*' || echo 0)
           new_count=$((count + 1))
-          sed -i "s/This workflow has run $count times./This workflow has run $new_count times./" README.md
+          # Use `sed` to update the README with the new count
+          sed -i "s/This workflow has run $count times/This workflow has run $new_count times/" README.md
 
       - name: Commit and Push Changes
         run: |
