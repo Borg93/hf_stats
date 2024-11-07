@@ -24,6 +24,9 @@ jobs:
       - name: Run Scrapy Spider to Update Database
         run: uv run scrapy crawl huggingface
 
+      - name: Update README Run Counter
+        run: uv run huggingface_scraper/update_readme.py
+
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
