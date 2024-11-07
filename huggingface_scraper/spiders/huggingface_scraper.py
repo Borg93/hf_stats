@@ -8,6 +8,8 @@ class HuggingFaceSpider(scrapy.Spider):
     name = "huggingface"
 
     def start_requests(self):
+        self.scrape_timestamp = datetime.now()
+
         with open("hf.yaml", "r") as f:
             data = yaml.safe_load(f)
 
@@ -45,9 +47,10 @@ class HuggingFaceSpider(scrapy.Spider):
     def save_to_db(self, repo, counter, table):
         conn = sqlite3.connect(self.settings.get("DATABASE"))
         c = conn.cursor()
+
         c.execute(
             f"INSERT INTO {table} (repo, counter, timestamp) VALUES (?, ?, ?)",
-            (repo, counter.strip() if counter else None, datetime.now()),
+            (repo, counter.strip() if counter else None, self.scrape_timestamp),
         )
         conn.commit()
         conn.close()
