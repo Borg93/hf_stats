@@ -39,10 +39,12 @@ class HuggingfaceScraperPipeline:
         query = f"SELECT repo, counter, timestamp FROM {table_name}"
         df = pd.read_sql_query(query, conn)
         conn.close()
-        
-        df["counter"] = pd.to_numeric(df["counter"].replace(",", "", regex=True), errors="coerce")
+
+        df["counter"] = pd.to_numeric(df["counter"], errors="coerce")
         df["timestamp"] = pd.to_datetime(df["timestamp"])
-    
+
+        print(df)
+
         output_dir = Path("plots")
         output_dir.mkdir(exist_ok=True)
 
@@ -64,9 +66,9 @@ class HuggingfaceScraperPipeline:
 
         plt.xlabel("Timestamp", fontsize=12, labelpad=10)
         plt.ylabel("Counter", fontsize=12, labelpad=10)
-        plt.title(title, fontsize=16, weight='bold', pad=20)
+        plt.title(title, fontsize=16, weight="bold", pad=20)
         plt.xticks(rotation=45, ha="right")
-        plt.grid(visible=True, color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
+        plt.grid(visible=True, color="gray", linestyle="--", linewidth=0.5, alpha=0.7)
 
         plt.legend(
             title="Repository",
