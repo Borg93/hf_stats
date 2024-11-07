@@ -39,10 +39,10 @@ class HuggingfaceScraperPipeline:
         query = f"SELECT repo, counter, timestamp FROM {table_name}"
         df = pd.read_sql_query(query, conn)
         conn.close()
-
-        df["counter"] = pd.to_numeric(df["counter"], errors="coerce")
+        
+        df["counter"] = pd.to_numeric(df["counter"].replace(",", "", regex=True), errors="coerce")
         df["timestamp"] = pd.to_datetime(df["timestamp"])
-
+    
         output_dir = Path("plots")
         output_dir.mkdir(exist_ok=True)
 
