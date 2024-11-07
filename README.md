@@ -6,5 +6,6 @@
 
 ![Dataset Data Plot](plots/dataset_data_plot.png)
 
+---
 
 This workflow has run X times.
