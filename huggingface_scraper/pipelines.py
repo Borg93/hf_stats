@@ -34,16 +34,15 @@ class HuggingfaceScraperPipeline:
         self.conn.commit()
         return item
 
+
     def generate_plot(self, table_name, title, file_name):
         conn = sqlite3.connect("huggingface_scraper.db")
         query = f"SELECT repo, counter, timestamp FROM {table_name}"
         df = pd.read_sql_query(query, conn)
         conn.close()
 
-        df["counter"] = pd.to_numeric(df["counter"], errors="coerce")
         df["timestamp"] = pd.to_datetime(df["timestamp"])
-
-        print(df)
+        df["counter"] = pd.to_numeric(df["counter"], errors="coerce")
 
         output_dir = Path("plots")
         output_dir.mkdir(exist_ok=True)
@@ -52,14 +51,20 @@ class HuggingfaceScraperPipeline:
 
         palette = sns.color_palette("Set2", n_colors=df["repo"].nunique())
 
+        latest_values = df.sort_values("timestamp").groupby("repo").last()["counter"]
+
         for (repo, data), color in zip(df.groupby("repo"), palette):
+            latest_value = (
+                int(latest_values[repo]) if pd.notna(latest_values[repo]) else "N/A"
+            )
+            label = f"{repo} (Latest: {latest_value})"
             plt.plot(
                 data["timestamp"],
                 data["counter"],
                 marker="o",
                 linestyle="-",
                 color=color,
-                label=repo,
+                label=label,
                 alpha=0.8,
                 markersize=6,
             )
@@ -84,4 +89,3 @@ class HuggingfaceScraperPipeline:
         plt.savefig(plot_path, dpi=300, bbox_inches="tight")
         plt.close()
 
-        print(f"Plot saved to {plot_path}")
