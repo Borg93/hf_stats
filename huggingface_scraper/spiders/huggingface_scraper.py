@@ -48,9 +48,14 @@ class HuggingFaceSpider(scrapy.Spider):
         conn = sqlite3.connect(self.settings.get("DATABASE"))
         c = conn.cursor()
 
+        try:
+            counter_int = int(counter.replace(",", ""))
+        except (ValueError, TypeError):
+            counter_int = None
+
         c.execute(
             f"INSERT INTO {table} (repo, counter, timestamp) VALUES (?, ?, ?)",
-            (repo, counter.strip() if counter else None, self.scrape_timestamp),
+            (repo, counter_int, self.scrape_timestamp),
         )
         conn.commit()
         conn.close()
