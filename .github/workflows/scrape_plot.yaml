@@ -1,0 +1,48 @@
+name: Update Database and Generate Plots
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run Scrapy Spider to Update Database
+        run: |
+          source .venv/bin/activate
+          scrapy crawl huggingface
+
+      - name: Generate Plots
+        run: |
+          source .venv/bin/activate
+          python -c "from huggingface_scraper.pipelines import HuggingfaceScraperPipeline; \
+                     pipeline = HuggingfaceScraperPipeline(); \
+                     pipeline.generate_plot('models_data', 'Model Data Over Time', 'model_data_plot.png'); \
+                     pipeline.generate_plot('datasets_data', 'Dataset Data Over Time', 'dataset_data_plot.png')"
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add huggingface_scraper.db plots/model_data_plot.png plots/dataset_data_plot.png
+          git commit -m "Update database and plots"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
