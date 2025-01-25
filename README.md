@@ -9,4 +9,4 @@
 [![Dataset Data Plot](plots/dataset_data_plot.png)](https://github.com/Borg93/hf_stats/blob/main/plots/dataset_data_plot.png)
 ___
 
-This workflow has run 78 times.
+This workflow has run 79 times.
