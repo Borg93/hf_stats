@@ -10,3 +10,8 @@ models:
 datasets:
   - Riksarkivet/swener_1800
   - Riksarkivet/eval_htr_out_of_domain_lines
+  - Riksarkivet/lagfarter
+  - Riksarkivet/goteborgs_poliskammare_fore_1900_lines
+  - Riksarkivet/svea_hovratt_lines
+  - Riksarkivet/swedish_fraktur
+  - Riksarkivet/trolldomskommissionen_lines
