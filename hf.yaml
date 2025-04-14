@@ -6,6 +6,7 @@ models:
   - Riksarkivet/yolov9-lines-within-regions-1
   - Riksarkivet/trocr-base-handwritten-swe
   - Riksarkivet/trocr-base-handwritten-hist-swe-2
+  - Riksarkivet/donut-base-hist-swe
 
 datasets:
   - Riksarkivet/swener_1800
